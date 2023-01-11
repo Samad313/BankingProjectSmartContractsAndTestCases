@@ -5,7 +5,8 @@ import "./pkrt.sol";
 import "./usdt.sol";
 
 
-contract CurrencyConverter {
+contract bank {
+    
     // Declare a mapping to store the balances of each account
     mapping(address => uint) public balances;
 
@@ -25,15 +26,18 @@ contract CurrencyConverter {
     }
 
     // The deposit function allows users to deposit an amount in USDT or PKRT
-    function deposit(uint _amount, address _currency) public {
+    function deposit(uint _amount, bool _currency) public {
         // If the currency is USDT, convert the amount to PKRT and add it to the user's balance
-        if ( USDollarToken ( _currency ) == usdt) 
+        if ( _currency ) 
         {
             usdt.burn(msg.sender,_amount); // Modify based on roles / Give access to bank contract in pkrt contract to burn
             _amount = _amount * conversionRate;
+            pkrt.mint(address( this ), _amount);
         }
-
-        pkrt.transferFrom(msg.sender,address(this),_amount);
+        else
+        {
+            pkrt.transferFrom(msg.sender,address(this),_amount);
+        }
 
         // Add the amount to the user's balance
         balances[msg.sender] += _amount;
@@ -48,4 +52,8 @@ contract CurrencyConverter {
         // Otherwise, transfer the balance to the user's account and reset their balance to 0
         pkrt.transfer(msg.sender,_amount);
     }
+
+    receive() external payable{
+        revert("Ether deposit blocked");
+    } 
 }
