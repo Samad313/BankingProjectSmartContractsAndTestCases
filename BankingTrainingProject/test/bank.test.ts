@@ -19,15 +19,15 @@ describe ( "Bank" , function()
         
     before("Initialization of Contract", async () => {
 		
-        const _pkrt = await ethers.getContractFactory("pkrt");
+        const _pkrt = await ethers.getContractFactory("RupeesToken");
 		rupeesToken = await _pkrt.deploy() as RupeesToken;
 
-        const _usdt = await ethers.getContractFactory("usdt");
+        const _usdt = await ethers.getContractFactory("USDollarToken");
 		usdollarToken = await _usdt.deploy() as USDollarToken;
 		
         [ owner ] = await ethers.getSigners();
-		const bank = await ethers.getContractFactory("Bank");
-		Bank = await bank.deploy(1,owner.address,owner.address) as Bank;
+		const bank = await ethers.getContractFactory("bank");
+		Bank = await bank.deploy(1,rupeesToken.address,usdollarToken.address) as Bank;
 
 	});
 
@@ -58,12 +58,13 @@ describe ( "Bank" , function()
 	});
 
     //Alowance test cases 
-    it("Test case to check with allowance given on this address ", async function () {
-
+    /* it("Test case to check with allowance given on this address pkrt ", async function () {
+        expect(await rupeesToken.allowance(owner.address,Bank.address)).to.toString()
     });
 
-    it("Test case to check without allowance given on this address ", async function () {
-    });
+    it("Test case to check without allowance given on this address usdt ", async function () {
+        usdollarToken.allowance(owner.address, Bank.address);
+    }); */
     
     //Minting test case for pkrt
     describe("Mint Test PKRT", function () {
@@ -89,8 +90,8 @@ describe ( "Bank" , function()
 	});
 
     //Burn test case to USDT 
-    
 
+/*
 
     // Test cases to check deposit function
     it("Test case to check deposit with correct amount", async function () {
@@ -109,7 +110,7 @@ describe ( "Bank" , function()
     it("Test case to check if bank has the ", async function () {
     });
 
-
+*/
 
 
 });
